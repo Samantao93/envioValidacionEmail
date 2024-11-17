@@ -7,6 +7,7 @@ document.addEventListener('DOMContentLoaded',() => {
     }
 
     const inputEmail = document.querySelector("#email");
+    const inputCC = document.querySelector("#cc");
     const inputAsunto = document.querySelector("#asunto");
     const inputMensaje = document.querySelector("#mensaje");
     const formulario = document.querySelector("#formulario");
@@ -14,6 +15,7 @@ document.addEventListener('DOMContentLoaded',() => {
     const btnReset = document.querySelector("button[type=reset]");        
 
     inputEmail.addEventListener('blur',readValue);
+    inputCC.addEventListener('blur',readValue);
     inputAsunto.addEventListener('blur',readValue);
     inputMensaje.addEventListener('blur',readValue);
     formulario.addEventListener('submit',activarSpinner);
@@ -25,15 +27,16 @@ document.addEventListener('DOMContentLoaded',() => {
 
     function readValue (e) {
         const id = e.target.id
-
-        objeto[id] = e.target.value
+        if(id !== 'cc') {
+            objeto[id] = e.target.value
+        }
         
         const referencia = e.target.parentElement;
         const alerta = referencia.querySelector('.alerta');
         const mensaje = document.createElement('P');
         mensaje.classList.add("bg-red-600","p-2", "text-white","text-center","alerta");
 
-        if(e.target.value.trim()===''){
+        if(id !== 'cc' && e.target.value.trim()===''){
             mensaje.textContent = `El campo ${id} es obligatorio`;
             comprobarAlerta(alerta,referencia,mensaje);
             objeto[id] = ''
@@ -41,13 +44,16 @@ document.addEventListener('DOMContentLoaded',() => {
             return;
         }
 
-        if(id === 'email' && !validarEmail(e.target.value.trim())){
+        if((id === 'email' || id === 'cc') && !validarEmail(e.target.value.trim())){
             mensaje.textContent = `El campo ${id} no es válido`;
             comprobarAlerta(alerta,referencia,mensaje);
-            objeto[id] = ''
-            activarEnviar(objeto);
+            if(id !== 'cc') {
+                objeto[id] = ''
+                activarEnviar(objeto);
+            }
             return;
         }       
+        console.log(objeto)
 
         limpiarAlerta(referencia);
         
